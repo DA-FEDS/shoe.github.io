@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clicker Game</title>
+    <title>MagmaKlicker</title>
     <style>
         body {
             display: flex;
@@ -16,8 +16,8 @@
             font-family: Arial, sans-serif;
         }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 24px;
             cursor: pointer;
             border: none;
             border-radius: 5px;
@@ -28,91 +28,83 @@
         button:hover {
             background-color: #21a1f1;
         }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 24px;
+        }
         .helper {
-            margin: 5px;
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Clicker Game</h1>
+    <h1>MagmaKlicker</h1>
     <p>Count: <span id="count">0</span></p>
     <button id="clickButton">Click Me!</button>
 
-    <h2>Helpers</h2>
-    <div id="helpers"></div>
+    <div class="helper">
+        <h2>Helpers</h2>
+        <div id="helperList"></div>
+    </div>
 
     <script>
         let count = 0;
+        let clickBoost = 1; // Base click value
         const countDisplay = document.getElementById('count');
         const clickButton = document.getElementById('clickButton');
-        const helpersContainer = document.getElementById('helpers');
+        const helperList = document.getElementById('helperList');
 
-        // Clicker helpers with unique names and higher values
+        // Define helpers
         const helpers = [
-            { name: "Epic Finger Booster", cost: 500, boost: 50, owned: 0 },
-            { name: "Mega Click Machine", cost: 1500, boost: 200, owned: 0 },
-            { name: "Ultra Turbo Clicker", cost: 3000, boost: 500, owned: 0 },
-            { name: "Legendary Power Clicker", cost: 5000, boost: 1000, owned: 0 },
-            { name: "That One Auto-Clicker", cost: 10000, boost: 0, auto: true, owned: 0 },
+            { name: "Fire Finger", cost: 50, cps: 1, owned: 0 },
+            { name: "Magma Machine", cost: 200, cps: 5, owned: 0 },
+            { name: "Lava Launcher", cost: 500, cps: 10, owned: 0 },
+            { name: "Inferno Instigator", cost: 1000, cps: 20, owned: 0 },
+            { name: "Volcanic Vortex", cost: 5000, cps: 50, owned: 0 },
+            { name: "Eruption Enhancer", cost: 10000, cps: 100, owned: 0 },
+            { name: "Magma Mega Boost", cost: 20000, cps: 200, owned: 0 },
+            { name: "Molten Multiplier", cost: 50000, cps: 500, owned: 0 },
+            { name: "Heatwave Helper", cost: 100000, cps: 1000, owned: 0 },
+            { name: "Scorching Support", cost: 250000, cps: 2000, owned: 0 },
+            { name: "Blazing Buddy", cost: 500000, cps: 5000, owned: 0 },
+            { name: "Raging Inferno", cost: 1000000, cps: 10000, owned: 0 },
+            { name: "Flame Fortress", cost: 2500000, cps: 20000, owned: 0 },
+            { name: "Pyroclastic Partner", cost: 5000000, cps: 50000, owned: 0 },
+            { name: "Ultimate Magma Master", cost: 10000000, cps: 100000, owned: 0 }, // OP helper
         ];
 
-        // Add click event for the main button
+        // Click button functionality
         clickButton.addEventListener('click', () => {
-            count++;
-            updateCountDisplay();
+            count += clickBoost;
+            countDisplay.textContent = count;
         });
 
         // Create helper buttons
         helpers.forEach(helper => {
             const button = document.createElement('button');
-            button.innerText = `Buy ${helper.name} (${helper.cost} points)`;
-            button.classList.add('helper');
+            button.innerText = `${helper.name} - Cost: ${helper.cost} - CPS: ${helper.cps}`;
+            button.classList.add('helperButton');
 
             button.addEventListener('click', () => {
                 if (count >= helper.cost) {
-                    count -= helper.cost;
-                    helper.owned++;
-                    if (helper.auto) {
-                        startAutoClicker();
-                    } else {
-                        // Increase the count by the boost amount when purchased
-                        clickButton.innerText = `Click Me! (+${helper.boost})`;
-                    }
-                    updateCountDisplay();
-                    button.disabled = true; // Disable the button after purchase
+                    count -= helper.cost; // Deduct cost
+                    helper.owned++; // Increase ownership count
+                    clickBoost += helper.cps; // Increase click boost
+                    countDisplay.textContent = count;
+
+                    // Disable button after purchase
+                    button.disabled = true;
+                    button.innerText = `${helper.name} Purchased!`;
                 } else {
                     alert("Not enough points!");
                 }
             });
 
-            helpersContainer.appendChild(button);
+            helperList.appendChild(button);
         });
-
-        function updateCountDisplay() {
-            countDisplay.textContent = count;
-        }
-
-        function startAutoClicker() {
-            setInterval(() => {
-                if (helpers[4].owned > 0) {
-                    count += 10; // Adjust the value as needed for auto-clicks
-                    updateCountDisplay();
-                }
-            }, 1000); // Click every second
-        }
-
-        // Anti-tamper check
-        const originalConsoleLog = console.log;
-        console.log = function() {
-            alert("Tampering detected! Please close the console.");
-            window.location.reload();
-        };
-
-        setInterval(() => {
-            if (document.hidden) {
-                alert("Please don't leave the game!");
-            }
-        }, 5000);
     </script>
 </body>
 </html>
