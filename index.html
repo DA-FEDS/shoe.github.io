@@ -23,9 +23,13 @@
             border-radius: 5px;
             background-color: #61dafb;
             color: black;
+            margin: 5px;
         }
         button:hover {
             background-color: #21a1f1;
+        }
+        .helper {
+            margin: 5px;
         }
     </style>
 </head>
@@ -33,16 +37,69 @@
     <h1>Clicker Game</h1>
     <p>Count: <span id="count">0</span></p>
     <button id="clickButton">Click Me!</button>
-    
+
+    <h2>Helpers</h2>
+    <div id="helpers"></div>
+
     <script>
         let count = 0;
         const countDisplay = document.getElementById('count');
         const clickButton = document.getElementById('clickButton');
+        const helpersContainer = document.getElementById('helpers');
 
+        // Clicker helpers with unique names and higher values
+        const helpers = [
+            { name: "Epic Finger Booster", cost: 500, boost: 50, owned: 0 },
+            { name: "Mega Click Machine", cost: 1500, boost: 200, owned: 0 },
+            { name: "Ultra Turbo Clicker", cost: 3000, boost: 500, owned: 0 },
+            { name: "Legendary Power Clicker", cost: 5000, boost: 1000, owned: 0 },
+            { name: "That One Auto-Clicker", cost: 10000, boost: 0, auto: true, owned: 0 },
+        ];
+
+        // Add click event for the main button
         clickButton.addEventListener('click', () => {
             count++;
-            countDisplay.textContent = count;
+            updateCountDisplay();
         });
+
+        // Create helper buttons
+        helpers.forEach(helper => {
+            const button = document.createElement('button');
+            button.innerText = `Buy ${helper.name} (${helper.cost} points)`;
+            button.classList.add('helper');
+
+            button.addEventListener('click', () => {
+                if (count >= helper.cost) {
+                    count -= helper.cost;
+                    helper.owned++;
+                    if (helper.auto) {
+                        startAutoClicker();
+                    } else {
+                        // Increase the count by the boost amount when purchased
+                        clickButton.innerText = `Click Me! (+${helper.boost})`;
+                    }
+                    updateCountDisplay();
+                    button.disabled = true; // Disable the button after purchase
+                } else {
+                    alert("Not enough points!");
+                }
+            });
+
+            helpersContainer.appendChild(button);
+        });
+
+        function updateCountDisplay() {
+            countDisplay.textContent = count;
+        }
+
+        function startAutoClicker() {
+            setInterval(() => {
+                if (helpers[4].owned > 0) {
+                    count += 10; // Adjust the value as needed for auto-clicks
+                    updateCountDisplay();
+                }
+            }, 1000); // Click every second
+        }
 
         // Anti-tamper check
         const originalConsoleLog = console.log;
