@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #61dafb;
+            color: black;
+        }
+        button:hover {
+            background-color: #21a1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clicker Game</h1>
+    <p>Count: <span id="count">0</span></p>
+    <button id="clickButton">Click Me!</button>
+    
+    <script>
+        let count = 0;
+        const countDisplay = document.getElementById('count');
+        const clickButton = document.getElementById('clickButton');
+
+        clickButton.addEventListener('click', () => {
+            count++;
+            countDisplay.textContent = count;
+        });
+
+        // Anti-tamper check
+        const originalConsoleLog = console.log;
+        console.log = function() {
+            alert("Tampering detected! Please close the console.");
+            window.location.reload();
+        };
+
+        setInterval(() => {
+            if (document.hidden) {
+                alert("Please don't leave the game!");
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
